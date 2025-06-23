@@ -4,6 +4,6 @@ namespace ProPresenter7WEB.Service
 {
     public interface IPresentationService
     {
-        Presentation[] GetPresentations();
+        Task<Presentation> GetPresentationAsync(string presentationUuid);
     }
 }

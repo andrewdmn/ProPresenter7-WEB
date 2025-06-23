@@ -2,8 +2,10 @@
 {
     public class Presentation
     {
-        public int Id { get; set; }
+        public required string Id { get; set; }
 
         public required string Name { get; set; }
+
+        public required int SlideCount { get; set; }
     }
 }

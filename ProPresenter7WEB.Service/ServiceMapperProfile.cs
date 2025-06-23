@@ -14,7 +14,7 @@ namespace ProPresenter7WEB.Service
                 .ForMember(dest => dest.Uuid, opt => opt.MapFrom(src => src.Id.Uuid))
                 .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.Id.Name));
 
-            CreateMap<PlaylistDetailsItem, PlaylistDetailsPresentation>()
+            CreateMap<PlaylistDetailsItem, PresentationItem>()
                 .ForMember(dest => dest.Uuid, opt => opt.MapFrom(src => src.Id.Uuid))
                 .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.Id.Name));
             

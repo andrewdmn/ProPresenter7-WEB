@@ -26,8 +26,8 @@ namespace ProPresenter7WEB.DesktopApplication.ViewModels.Controls
         private string _applyButtonText = ProPresenterControlResoures.ApplyButtonText;
         private ObservableCollection<Playlist>? _playlists;
         private Playlist? _selectedPlaylist;
-        private ObservableCollection<PlaylistDetailsPresentation>? _presentations;
-        private PlaylistDetailsPresentation? _selectedPresentation;
+        private ObservableCollection<PresentationItem>? _presentations;
+        private PresentationItem? _selectedPresentation;
 
         public ProPresenterControlViewModel(
             ILogger<ProPresenterControlViewModel> logger,
@@ -97,13 +97,13 @@ namespace ProPresenter7WEB.DesktopApplication.ViewModels.Controls
             }
         }
 
-        public ObservableCollection<PlaylistDetailsPresentation>? Presentations
+        public ObservableCollection<PresentationItem>? Presentations
         {
             get => _presentations;
             set => SetProperty(ref _presentations, value);
         }
 
-        public PlaylistDetailsPresentation? SelectedPresentation
+        public PresentationItem? SelectedPresentation
         {
             get => _selectedPresentation;
             set => SetProperty(ref _selectedPresentation, value);
@@ -192,7 +192,7 @@ namespace ProPresenter7WEB.DesktopApplication.ViewModels.Controls
                 }
 
                 var playlistDetails = await _playlistService.GetPlayListDetailsAsync(SelectedPlaylist.Uuid);
-                Presentations = new ObservableCollection<PlaylistDetailsPresentation>(playlistDetails.Presentations);
+                Presentations = new ObservableCollection<PresentationItem>(playlistDetails.Presentations);
                 SelectedPresentation = Presentations.First();
 
                 _logger.LogInformation("Initialized presentation lists with {0} items. Selected presentation uuid: {1}.",

@@ -6,6 +6,6 @@
 
         public required string Name { get; set; }
 
-        public required IEnumerable<PlaylistDetailsPresentation> Presentations { get; set; }
+        public required IEnumerable<PresentationItem> Presentations { get; set; }
     }
 }
