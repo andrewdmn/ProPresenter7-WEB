@@ -8,43 +8,31 @@ namespace ProPresenter7WEB.Service
     {
         private readonly IMapper _mapper;
         private readonly HttpClient _httpClient;
-        private readonly IProPresenterService _proPresenterService;
+        private readonly IProPresenterStorageService _proPresenterService;
+        private readonly string _presentationApiUrl;
 
         public PresentationService(
             IMapper mapper,
             HttpClient httpClient,
-            IProPresenterService proPresenterService)
+            IProPresenterStorageService proPresenterService)
         {
             _mapper = mapper;
             _httpClient = httpClient;
             _proPresenterService = proPresenterService;
+            _presentationApiUrl = $"{_proPresenterService.ApiAddress}/v1/presentation";
         }
 
         public async Task<Presentation> GetPresentationAsync(string presentationUuid)
         {
-            if (_proPresenterService.ApiAddress == null)
-            {
-                throw new Exception("ProPresenter connection is not set.");
-            }
+            var response = await _httpClient.GetAsync($"{_presentationApiUrl}/{presentationUuid}");
 
-            try
-            {
-                var url = $"{_proPresenterService.ApiAddress}/v1/presentation/{presentationUuid}";
+            response.EnsureSuccessStatusCode();
 
-                var response = await _httpClient.GetAsync(url);
+            var contract = await response.Content.ReadFromJsonAsync<Contracts.PresentationResponse>();
 
-                response.EnsureSuccessStatusCode();
+            var result = _mapper.Map<Presentation>(contract?.Presentation);
 
-                var contract = await response.Content.ReadFromJsonAsync<Contracts.PresentationResponse>();
-
-                var result = _mapper.Map<Presentation>(contract?.Presentation);
-
-                return result;
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
+            return result;
         }
     }
 }

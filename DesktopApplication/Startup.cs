@@ -32,10 +32,7 @@ namespace ProPresenter7WEB.DesktopApplication
             services.AddSingleton<ProPresenterControlViewModel>();
             services.AddSingleton<IAutoMapperFactory, AutoMapperFactory>();
             services.AddSingleton(services => services.GetRequiredService<IAutoMapperFactory>().Create());
-
-            // TODO: Merge IProPresenterService and IPresentationStorageService they are both for same purpose to caching data
-            services.AddSingleton<IProPresenterService, ProPresenterService>();
-            services.AddSingleton<IPresentationStorageService, PresentationStorageService>();
+            services.AddSingleton<IProPresenterStorageService, ProPresenterStorageService>();
 
             services.AddScoped<IProPresenterInfoService, ProPresenterInfoService>();
             services.AddScoped<IPlaylistService, PlaylistService>();

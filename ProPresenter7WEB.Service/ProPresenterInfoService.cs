@@ -8,12 +8,12 @@ namespace ProPresenter7WEB.Service
     {
         private readonly IMapper _mapper;
         private readonly HttpClient _httpClient;
-        private readonly IProPresenterService _proPresenterService;
+        private readonly IProPresenterStorageService _proPresenterService;
 
         public ProPresenterInfoService(
             IMapper mapper,
             HttpClient httpClient, 
-            IProPresenterService proPresenterService)
+            IProPresenterStorageService proPresenterService)
         {
             _mapper = mapper;
             _httpClient = httpClient;

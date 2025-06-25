@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using ProPresenter7WEB.Core;
 using ProPresenter7WEB.Service;
+using ProPresenter7WEB.Service.Exceptions;
 
 namespace ProPresenter7WEB.WebServerApplication.Controllers
 {
@@ -9,27 +10,33 @@ namespace ProPresenter7WEB.WebServerApplication.Controllers
     public class PresentationController : ControllerBase
     {
         private readonly IPresentationService _presentationService;
-        private readonly IPresentationStorageService _presentationStorageService;
+        private readonly IProPresenterStorageService _proPresenterStorageService;
 
         public PresentationController(
             IPresentationService presentationService,
-            IPresentationStorageService presentationStorageService)
+            IProPresenterStorageService proPresenterStorageService)
         {
             _presentationService = presentationService;
-            _presentationStorageService = presentationStorageService;
+            _proPresenterStorageService = proPresenterStorageService;
         }
 
         [HttpGet]
         public async Task<Presentation> Get()
         {
-            var presentationUuid = _presentationStorageService.GetPresentationUuid();
-
-            if (presentationUuid == null)
+            try
             {
-                throw new BadHttpRequestException("Presentation is not selected on the desktop application.");
-            }
+                var presentationUuid = _proPresenterStorageService.PresentationUuid;
 
-            return await _presentationService.GetPresentationAsync(presentationUuid);
+                return await _presentationService.GetPresentationAsync(presentationUuid);
+            }
+            catch (ProPresenterStorageServiceException ex)
+            {
+                throw new BadHttpRequestException(ex.Message);
+            }
+            catch
+            {
+                throw;
+            }
         }
     }
 }

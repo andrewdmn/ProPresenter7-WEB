@@ -14,10 +14,9 @@ namespace ProPresenter7WEB.DesktopApplication.ViewModels.Controls
 {
     public class ProPresenterControlViewModel : ViewModelBase
     {
-        private readonly IProPresenterService _proPresenterService;
+        private readonly IProPresenterStorageService _proPresenterStorageService;
         private readonly IProPresenterInfoService _proPresenterInfoService;
         private readonly IPlaylistService _playlistService;
-        private readonly IPresentationStorageService _presentationStorageService;
         private readonly ILogger _logger;
 
         private bool _isConnected;
@@ -31,16 +30,14 @@ namespace ProPresenter7WEB.DesktopApplication.ViewModels.Controls
 
         public ProPresenterControlViewModel(
             ILogger<ProPresenterControlViewModel> logger,
-            IProPresenterService proPresenterService,
+            IProPresenterStorageService proPresenterStorageService,
             IProPresenterInfoService proPresenterInfoService,
-            IPlaylistService playlistService,
-            IPresentationStorageService presentationStorageService)
+            IPlaylistService playlistService)
         {
             _logger = logger;
-            _proPresenterService = proPresenterService;
+            _proPresenterStorageService = proPresenterStorageService;
             _proPresenterInfoService = proPresenterInfoService;
             _playlistService = playlistService;
-            _presentationStorageService = presentationStorageService;
 
             ProPresenterConnectModel = ModelCacheHelper
                 .ReadModelState<ProPresenterConnectModel>() ?? new ProPresenterConnectModel();
@@ -146,7 +143,7 @@ namespace ProPresenter7WEB.DesktopApplication.ViewModels.Controls
                 return;
             }
 
-            _presentationStorageService.SetPresentationUuid(SelectedPresentation.Uuid);
+            _proPresenterStorageService.PresentationUuid = SelectedPresentation.Uuid;
             IsSelectedPresentationApplied = true;
             ApplyButtonText = ProPresenterControlResoures.UpdateButtonText;
 
@@ -155,9 +152,9 @@ namespace ProPresenter7WEB.DesktopApplication.ViewModels.Controls
 
         private void CancelSelectedPresentation()
         {
-            var selectedPresentationUuid = _presentationStorageService.GetPresentationUuid();
-            
-            _presentationStorageService.RemovePresentationUuid();
+            var selectedPresentationUuid = _proPresenterStorageService.PresentationUuid;
+
+            _proPresenterStorageService.RemovePresentationUuid();
             IsSelectedPresentationApplied = false;
             ApplyButtonText = ProPresenterControlResoures.ApplyButtonText;
 
@@ -230,7 +227,7 @@ namespace ProPresenter7WEB.DesktopApplication.ViewModels.Controls
                     return;
                 }
 
-                _proPresenterService.SetApiAddress(
+                _proPresenterStorageService.SetApiAddress(
                     ProPresenterConnectModel.IpAddress, ProPresenterConnectModel.Port.Value);
                 var proPresenterInfo = await _proPresenterInfoService.GetProPresenterInfoAsync();
 
@@ -240,7 +237,7 @@ namespace ProPresenter7WEB.DesktopApplication.ViewModels.Controls
                     ConnectButtonText = ProPresenterControlResoures.DisconnectButtonText;
 
                     _logger.LogInformation(
-                        $"Connection to ProPresenter {_proPresenterService.ApiAddress} established.");
+                        $"Connection to ProPresenter {_proPresenterStorageService.ApiAddress} established.");
                     _logger.LogInformation(
                         $"ProPresenter {proPresenterInfo.ApiVersion} is running on {proPresenterInfo.Platform}.");
 
@@ -264,7 +261,7 @@ namespace ProPresenter7WEB.DesktopApplication.ViewModels.Controls
             IsConnected = false;
             SelectedPlaylist = null;
             SelectedPresentation = null;
-            _presentationStorageService.RemovePresentationUuid();
+            _proPresenterStorageService.RemovePresentationUuid();
             IsSelectedPresentationApplied = false;
 
             ApplyButtonText = ProPresenterControlResoures.ApplyButtonText;
