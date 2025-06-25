@@ -8,7 +8,7 @@ namespace ProPresenter7WEB.Service
     {
         private readonly IMapper _mapper;
         private readonly HttpClient _httpClient;
-        private readonly string _apiPresentationUrl;
+        private readonly IProPresenterService _proPresenterService;
 
         public PresentationService(
             IMapper mapper,
@@ -17,20 +17,34 @@ namespace ProPresenter7WEB.Service
         {
             _mapper = mapper;
             _httpClient = httpClient;
-
-            _apiPresentationUrl = $"{proPresenterService.ApiAddress}/v1/presentation";
+            _proPresenterService = proPresenterService;
         }
 
         public async Task<Presentation> GetPresentationAsync(string presentationUuid)
         {
-            var response = await _httpClient.GetAsync(_apiPresentationUrl);
+            if (_proPresenterService.ApiAddress == null)
+            {
+                throw new Exception("ProPresenter connection is not set.");
+            }
 
-            response.EnsureSuccessStatusCode();
+            try
+            {
+                var url = $"{_proPresenterService.ApiAddress}/v1/presentation/{presentationUuid}";
 
-            var contract = await response.Content.ReadFromJsonAsync<Contracts.Presentation>();
+                var response = await _httpClient.GetAsync(url);
 
-            // TODO: Implement mapping and try to add logic to count amount of slides
-            return _mapper.Map<Presentation>(contract);
+                response.EnsureSuccessStatusCode();
+
+                var contract = await response.Content.ReadFromJsonAsync<Contracts.PresentationResponse>();
+
+                var result = _mapper.Map<Presentation>(contract?.Presentation);
+
+                return result;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
         }
     }
 }

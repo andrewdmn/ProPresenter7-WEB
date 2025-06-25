@@ -9,18 +9,27 @@ namespace ProPresenter7WEB.WebServerApplication.Controllers
     public class PresentationController : ControllerBase
     {
         private readonly IPresentationService _presentationService;
+        private readonly IPresentationStorageService _presentationStorageService;
 
-        public PresentationController(IPresentationService presentationService)
+        public PresentationController(
+            IPresentationService presentationService,
+            IPresentationStorageService presentationStorageService)
         {
             _presentationService = presentationService;
+            _presentationStorageService = presentationStorageService;
         }
 
         [HttpGet]
-        public IEnumerable<Presentation> Get()
+        public async Task<Presentation> Get()
         {
-            var result = _presentationService.GetPresentations();
+            var presentationUuid = _presentationStorageService.GetPresentationUuid();
 
-            return result;
+            if (presentationUuid == null)
+            {
+                throw new BadHttpRequestException("Presentation is not selected on the desktop application.");
+            }
+
+            return await _presentationService.GetPresentationAsync(presentationUuid);
         }
     }
 }

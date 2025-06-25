@@ -2,7 +2,7 @@
 {
     public class Presentation
     {
-        public required string Id { get; set; }
+        public required string Uuid { get; set; }
 
         public required string Name { get; set; }
 
