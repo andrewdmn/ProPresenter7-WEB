@@ -30,5 +30,21 @@ namespace ProPresenter7WEB.Service
 
             return presentation;
         }
+
+        public async Task<WebImage> GetSlideImageAsync(string presentationUuid, int slideIndex)
+        {
+            var response = await _httpClient.GetAsync($"{BaseApiAddress}/v1/presentation/{presentationUuid}/thumbnail/{slideIndex}");
+
+            response.EnsureSuccessStatusCode();
+
+            var contentType = response.Content.Headers.ContentType?.MediaType;
+            var slideImageStream = await response.Content.ReadAsStreamAsync();
+
+            return new WebImage
+            {
+                ContentType = contentType ?? "image/jpeg",
+                Content = slideImageStream,
+            };
+        }
     }
 }

@@ -29,10 +29,25 @@ namespace ProPresenter7WEB.WebServerApplication.Controllers
             if (_proPresenterStorageService.PresentationUuid is null)
                 throw new ProPresenterApiServiceException("Presentation is not selected.");
 
-            var presentationUuid = _proPresenterStorageService.PresentationUuid;
             _presentationService.BaseApiAddress = _proPresenterStorageService.ApiAddress;
 
-            return await _presentationService.GetPresentationAsync(presentationUuid);
+            return await _presentationService.GetPresentationAsync(_proPresenterStorageService.PresentationUuid);
+        }
+
+        [HttpGet("Slide/{slideIndex}")]
+        public async Task<IActionResult> GetSlideImage(int slideIndex)
+        {
+            if (_proPresenterStorageService.ApiAddress is null)
+                throw new ProPresenterApiAddressNotSetException();
+
+            if (_proPresenterStorageService.PresentationUuid is null)
+                throw new ProPresenterApiServiceException("Presentation is not selected.");
+
+            _presentationService.BaseApiAddress = _proPresenterStorageService.ApiAddress;
+
+            var slideImage = await _presentationService.GetSlideImageAsync(_proPresenterStorageService.PresentationUuid, slideIndex);
+
+            return File(slideImage.Content, slideImage.ContentType);
         }
     }
 }

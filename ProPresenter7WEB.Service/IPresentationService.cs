@@ -7,5 +7,7 @@ namespace ProPresenter7WEB.Service
         string? BaseApiAddress { get; set; }
 
         Task<Presentation> GetPresentationAsync(string presentationUuid);
+
+        Task<WebImage> GetSlideImageAsync(string presentationUuid, int slideIndex);
     }
 }
