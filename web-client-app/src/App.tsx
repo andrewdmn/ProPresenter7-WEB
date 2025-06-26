@@ -10,7 +10,7 @@ import { useState, useEffect } from 'react';
 import {
     getActiveSlideIndex,
     getPresentationDetails,
-    getThumbnail,
+    getThumbnailUrl,
     triggerNextSlide,
     triggerPrevSlide,
     triggerSlide
@@ -23,16 +23,15 @@ function App() {
     const [presentationDetails, setPresentationDetails] = useState<Presentation | null>(null);
 
     useEffect(() => {
-        // TODO: Uncomment when relevant endpoint is implemented
-        //Init();
+        Init();
     }, []);
 
     async function Init(): Promise<void> {
         const presentationDetails = await getPresentationDetails();
         setPresentationDetails(presentationDetails);
 
-        const activeSlide = await getActiveSlideIndex();
-        setActiveSlide(activeSlide);
+        //const activeSlide = await getActiveSlideIndex();
+        //setActiveSlide(activeSlide);
     }
 
     function slideImages(): any[] | null {
@@ -44,7 +43,7 @@ function App() {
 
         for (let i = 0; i < presentationDetails.slideCount; i++) {
             slides.push(<Image
-                src={getThumbnail(presentationDetails.uuid, i)}
+                src={getThumbnailUrl(i)}
                 className={presentationDetails.uuid === activeSlide?.presentationUuid && i === activeSlide?.slideIndex ? 'slide active-slide' : 'slide'}
                 key={i}
                 width='300'

@@ -1,15 +1,16 @@
 import { Presentation, Slide } from '../core';
 
-//const apiUrl = import.meta.env.VITE_API_URL;
+const apiUrl = import.meta.env.VITE_API_URL;
 
 export async function getPresentationDetails(): Promise<Presentation> {
-    // TODO: Return inforamtion about a presentation (title, slides).
-    throw new Error("Not implemented");
+    const response = await fetch(`${apiUrl}/api/Presentation`);
+    const presentation = await response.json();
+
+    return presentation;
 }
 
-export function getThumbnail(presentationUuid: any, slideIndex: any): string {
-    // TODO: Return image of a slide.
-    throw new Error("Not implemented");
+export function getThumbnailUrl(slideIndex: any): string {
+    return `${apiUrl}/api/Presentation/Slide/${slideIndex}`;
 }
 
 export async function getActiveSlideIndex(): Promise<Slide> {
