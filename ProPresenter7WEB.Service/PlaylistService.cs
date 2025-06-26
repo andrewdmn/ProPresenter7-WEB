@@ -8,21 +8,20 @@ namespace ProPresenter7WEB.Service
     {
         private readonly IMapper _mapper;
         private readonly HttpClient _httpClient;
-        private readonly IProPresenterService _proPresenterService;
 
         public PlaylistService(
             IMapper mapper,
-            HttpClient httpClient,
-            IProPresenterService proPresenterService)
+            HttpClient httpClient)
         {
             _mapper = mapper;
             _httpClient = httpClient;
-            _proPresenterService = proPresenterService;
         }
+
+        public string? BaseApiAddress { get; set; }
 
         public async Task<IEnumerable<Playlist>> GetPlaylistsAsync()
         {
-            var response = await _httpClient.GetAsync($"{_proPresenterService.ApiAddress}/v1/playlists");
+            var response = await _httpClient.GetAsync($"{BaseApiAddress}/v1/playlists");
 
             response.EnsureSuccessStatusCode();
 
@@ -40,7 +39,7 @@ namespace ProPresenter7WEB.Service
 
         public async Task<PlaylistDetails> GetPlayListDetailsAsync(string uuid)
         {
-            var response = await _httpClient.GetAsync($"{_proPresenterService.ApiAddress}/v1/playlist/{uuid}");
+            var response = await _httpClient.GetAsync($"{BaseApiAddress}/v1/playlist/{uuid}");
 
             response.EnsureSuccessStatusCode();
 

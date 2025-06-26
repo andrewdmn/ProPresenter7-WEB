@@ -1,6 +1,6 @@
 ﻿namespace ProPresenter7WEB.Core
 {
-    public class PlaylistDetailsPresentation
+    public class PresentationItem
     {
         public required string Uuid { get; set; }
 

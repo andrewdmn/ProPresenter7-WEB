@@ -14,7 +14,7 @@ namespace ProPresenter7WEB.Service
                 .ForMember(dest => dest.Uuid, opt => opt.MapFrom(src => src.Id.Uuid))
                 .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.Id.Name));
 
-            CreateMap<PlaylistDetailsItem, PlaylistDetailsPresentation>()
+            CreateMap<PlaylistDetailsItem, PresentationItem>()
                 .ForMember(dest => dest.Uuid, opt => opt.MapFrom(src => src.Id.Uuid))
                 .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.Id.Name));
             
@@ -23,6 +23,12 @@ namespace ProPresenter7WEB.Service
                 .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.Id.Name))
                 .ForMember(dest => dest.Presentations, opt => opt.MapFrom(src => 
                     src.Items.Where(item => item.Type == PlaylistDetailsItemTypeEnum.Presentation)));
+
+            CreateMap<Contracts.Presentation, Core.Presentation>()
+                .ForMember(dest => dest.Uuid, opt => opt.MapFrom(src => src.Id.Uuid))
+                .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.Id.Name))
+                .ForMember(dest => dest.SlideCount, opt => opt.MapFrom(src => 
+                    src.Groups.SelectMany(gr => gr.Slides).Count()));
         }
     }
 }
