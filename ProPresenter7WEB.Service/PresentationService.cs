@@ -8,31 +8,27 @@ namespace ProPresenter7WEB.Service
     {
         private readonly IMapper _mapper;
         private readonly HttpClient _httpClient;
-        private readonly IProPresenterStorageService _proPresenterService;
-        private readonly string _presentationApiUrl;
 
         public PresentationService(
             IMapper mapper,
-            HttpClient httpClient,
-            IProPresenterStorageService proPresenterService)
+            HttpClient httpClient)
         {
             _mapper = mapper;
             _httpClient = httpClient;
-            _proPresenterService = proPresenterService;
-            _presentationApiUrl = $"{_proPresenterService.ApiAddress}/v1/presentation";
         }
+
+        public string? BaseApiAddress { get; set; }
 
         public async Task<Presentation> GetPresentationAsync(string presentationUuid)
         {
-            var response = await _httpClient.GetAsync($"{_presentationApiUrl}/{presentationUuid}");
+            var response = await _httpClient.GetAsync($"{BaseApiAddress}/v1/presentation/{presentationUuid}");
 
             response.EnsureSuccessStatusCode();
 
             var contract = await response.Content.ReadFromJsonAsync<Contracts.PresentationResponse>();
+            var presentation = _mapper.Map<Presentation>(contract?.Presentation);
 
-            var result = _mapper.Map<Presentation>(contract?.Presentation);
-
-            return result;
+            return presentation;
         }
     }
 }

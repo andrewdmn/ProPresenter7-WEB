@@ -229,6 +229,8 @@ namespace ProPresenter7WEB.DesktopApplication.ViewModels.Controls
 
                 _proPresenterStorageService.SetApiAddress(
                     ProPresenterConnectModel.IpAddress, ProPresenterConnectModel.Port.Value);
+                _playlistService.BaseApiAddress = _proPresenterStorageService.ApiAddress;
+
                 var proPresenterInfo = await _proPresenterInfoService.GetProPresenterInfoAsync();
 
                 if (proPresenterInfo != null)

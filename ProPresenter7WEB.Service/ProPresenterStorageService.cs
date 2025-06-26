@@ -13,7 +13,7 @@ namespace ProPresenter7WEB.Service
             {
                 if (_presentationUuid == null)
                 {
-                    throw new ProPresenterStorageServiceException("The presentation is not chosen. Please contact an operator.");
+                    throw new ProPresenterApiServiceException("The presentation is not chosen. Please contact an operator.");
                 }
 
                 return _presentationUuid;
@@ -36,7 +36,7 @@ namespace ProPresenter7WEB.Service
             {
                 if (_apiAddress == null)
                 {
-                    throw new ProPresenterStorageServiceException("ProPresenter API address is not set.");
+                    throw new ProPresenterApiServiceException("ProPresenter API address is not set.");
                 }
 
                 return _apiAddress;

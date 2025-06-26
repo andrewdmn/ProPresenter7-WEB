@@ -1,5 +1,4 @@
-﻿using AutoMapper;
-using Microsoft.AspNetCore.Builder;
+﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -8,6 +7,7 @@ using ProPresenter7WEB.DesktopApplication.ViewModels;
 using ProPresenter7WEB.DesktopApplication.ViewModels.Controls;
 using ProPresenter7WEB.DesktopApplication.Views;
 using ProPresenter7WEB.Service;
+using ProPresenter7WEB.WebServerApplication.Middlewares;
 using System.Reflection;
 
 namespace ProPresenter7WEB.DesktopApplication
@@ -46,6 +46,7 @@ namespace ProPresenter7WEB.DesktopApplication
                 app.UseDeveloperExceptionPage();
             }
 
+            app.UseMiddleware<ExceptionHandlingMiddleware>();
             app.UseStaticFiles();
             app.UseCors();
             app.UseRouting();

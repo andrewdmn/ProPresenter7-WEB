@@ -23,20 +23,16 @@ namespace ProPresenter7WEB.WebServerApplication.Controllers
         [HttpGet]
         public async Task<Presentation> Get()
         {
-            try
-            {
-                var presentationUuid = _proPresenterStorageService.PresentationUuid;
+            if (_proPresenterStorageService.ApiAddress is null)
+                throw new ProPresenterApiAddressNotSetException();
 
-                return await _presentationService.GetPresentationAsync(presentationUuid);
-            }
-            catch (ProPresenterStorageServiceException ex)
-            {
-                throw new BadHttpRequestException(ex.Message);
-            }
-            catch
-            {
-                throw;
-            }
+            if (_proPresenterStorageService.PresentationUuid is null)
+                throw new ProPresenterApiServiceException("Presentation is not selected.");
+
+            var presentationUuid = _proPresenterStorageService.PresentationUuid;
+            _presentationService.BaseApiAddress = _proPresenterStorageService.ApiAddress;
+
+            return await _presentationService.GetPresentationAsync(presentationUuid);
         }
     }
 }
