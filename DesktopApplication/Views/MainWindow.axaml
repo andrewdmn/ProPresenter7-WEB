@@ -54,8 +54,8 @@
                         Padding="0">
                         <HyperlinkButton 
                             Padding="0"
-                            Content="http://localhost:3000"
-                            NavigateUri="http://localhost:3000" />
+                            Content="http://localhost:5000"
+                            NavigateUri="http://localhost:5000" />
                     </TextBlock>
                     
                     <Label
