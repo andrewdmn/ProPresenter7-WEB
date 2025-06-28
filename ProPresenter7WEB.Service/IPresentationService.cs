@@ -9,5 +9,11 @@ namespace ProPresenter7WEB.Service
         Task<Presentation> GetPresentationAsync(string presentationUuid);
 
         Task<WebImage> GetSlideImageAsync(string presentationUuid, int slideIndex);
+
+        Task TriggerNextSlideAsync(string presentationUuid);
+
+        Task TriggerPreviousSlideAsync(string presentationUuid);
+
+        Task TriggerSlideAsync(string presentationUuid, int slideIndex);
     }
 }

@@ -21,7 +21,8 @@ namespace ProPresenter7WEB.Service
 
         public async Task<Presentation> GetPresentationAsync(string presentationUuid)
         {
-            var response = await _httpClient.GetAsync($"{BaseApiAddress}/v1/presentation/{presentationUuid}");
+            var url = $"{BaseApiAddress}/v1/presentation/{presentationUuid}";
+            var response = await _httpClient.GetAsync(url);
 
             response.EnsureSuccessStatusCode();
 
@@ -33,7 +34,8 @@ namespace ProPresenter7WEB.Service
 
         public async Task<WebImage> GetSlideImageAsync(string presentationUuid, int slideIndex)
         {
-            var response = await _httpClient.GetAsync($"{BaseApiAddress}/v1/presentation/{presentationUuid}/thumbnail/{slideIndex}");
+            var url = $"{BaseApiAddress}/v1/presentation/{presentationUuid}/thumbnail/{slideIndex}";
+            var response = await _httpClient.GetAsync(url);
 
             response.EnsureSuccessStatusCode();
 
@@ -45,6 +47,30 @@ namespace ProPresenter7WEB.Service
                 ContentType = contentType ?? "image/jpeg",
                 Content = slideImageStream,
             };
+        }
+
+        public async Task TriggerNextSlideAsync(string presentationUuid)
+        {
+            var url = $"{BaseApiAddress}/v1/presentation/{presentationUuid}/next/trigger";
+            var response = await _httpClient.GetAsync(url);
+
+            response.EnsureSuccessStatusCode();
+        }
+
+        public async Task TriggerPreviousSlideAsync(string presentationUuid)
+        {
+            var url = $"{BaseApiAddress}/v1/presentation/{presentationUuid}/previous/trigger";
+            var response = await _httpClient.GetAsync(url);
+
+            response.EnsureSuccessStatusCode();
+        }
+
+        public async Task TriggerSlideAsync(string presentationUuid, int slideIndex)
+        {
+            var url = $"{BaseApiAddress}/v1/presentation/{presentationUuid}/{slideIndex}/trigger";
+            var response = await _httpClient.GetAsync(url);
+
+            response.EnsureSuccessStatusCode();
         }
     }
 }
