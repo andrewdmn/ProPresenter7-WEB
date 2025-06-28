@@ -15,5 +15,9 @@ namespace ProPresenter7WEB.Service
         Task TriggerPreviousSlideAsync(string presentationUuid);
 
         Task TriggerSlideAsync(string presentationUuid, int slideIndex);
+
+        Task FocusPresentationAsync(string presentationUuid);
+
+        Task<ActiveSlideIndex> GetActiveSlideIndexAsync();
     }
 }

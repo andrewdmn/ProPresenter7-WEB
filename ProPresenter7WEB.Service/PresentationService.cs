@@ -72,5 +72,26 @@ namespace ProPresenter7WEB.Service
 
             response.EnsureSuccessStatusCode();
         }
+
+        public async Task FocusPresentationAsync(string presentationUuid)
+        {
+            var url = $"{BaseApiAddress}/v1/presentation/{presentationUuid}/focus";
+            var response = await _httpClient.GetAsync(url);
+
+            response.EnsureSuccessStatusCode();
+        }
+
+        public async Task<ActiveSlideIndex> GetActiveSlideIndexAsync()
+        {
+            var url = $"{BaseApiAddress}/v1/presentation/slide_index";
+            var response = await _httpClient.GetAsync(url);
+
+            response.EnsureSuccessStatusCode();
+
+            var contract = await response.Content.ReadFromJsonAsync<Contracts.PresentationSlideIndexResponse>();
+            var activeSlideIndex = _mapper.Map<ActiveSlideIndex>(contract?.PresentationIndex);
+
+            return activeSlideIndex;
+        }
     }
 }
