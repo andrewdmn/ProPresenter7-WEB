@@ -57,33 +57,36 @@ function App() {
     }
 
     function onTriggerSlide(uuid: string, slideIndex: number): void {
-        triggerSlide(uuid, slideIndex).then(() => {
-            setTimeout(() => {
-                getActiveSlideIndex().then(slide => {
-                    setActiveSlide(slide);
-                });
-            }, 200);
-        });
+        triggerSlide(slideIndex).then();
+        // triggerSlide(uuid, slideIndex).then(() => {
+        //     setTimeout(() => {
+        //         getActiveSlideIndex().then(slide => {
+        //             setActiveSlide(slide);
+        //         });
+        //     }, 200);
+        // });
     }
 
     function onTriggerNextSlide() {
-        triggerNextSlide().then(() => {
-            setTimeout(() => {
-                getActiveSlideIndex().then(slide => {
-                    setActiveSlide(slide);
-                });
-            }, 200);
-        });
+        triggerNextSlide().then();
+        // triggerNextSlide().then(() => {
+        //     setTimeout(() => {
+        //         getActiveSlideIndex().then(slide => {
+        //             setActiveSlide(slide);
+        //         });
+        //     }, 200);
+        // });
     }
 
     function onTriggerPrevSlide() {
-        triggerPrevSlide().then(() => {
-            setTimeout(() => {
-                getActiveSlideIndex().then(slide => {
-                    setActiveSlide(slide);
-                });
-            }, 200);
-        });
+        triggerPrevSlide().then();
+        // triggerPrevSlide().then(() => {
+        //     setTimeout(() => {
+        //         getActiveSlideIndex().then(slide => {
+        //             setActiveSlide(slide);
+        //         });
+        //     }, 200);
+        // });
     }
 
     return (

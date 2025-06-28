@@ -18,17 +18,14 @@ export async function getActiveSlideIndex(): Promise<Slide> {
     throw new Error("Not implemented");
 }
 
-export async function triggerSlide(presentationUuid: any, slideIndex: any) {
-    // TODO: Triger a slide
-    throw new Error("Not implemented");
+export async function triggerSlide(slideIndex: any) {
+    await fetch(`${apiUrl}/api/Slide/${slideIndex}/Trigger`);
 }
 
 export async function triggerNextSlide() {
-    // TODO: Trigger next slide.
-    throw new Error("Not implemented");
+    await fetch(`${apiUrl}/api/Slide/Next/Trigger`);
 }
 
 export async function triggerPrevSlide() {
-    // TODO: Trigger previous slide.
-    throw new Error("Not implemented");
+    await fetch(`${apiUrl}/api/Slide/Previous/Trigger`);
 }
