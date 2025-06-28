@@ -16,10 +16,10 @@ import {
     triggerSlide
 } from './services/ProPresenterService';
 
-import { Presentation, Slide } from './core/index';
+import { Presentation, ActiveSlideIndex } from './core/index';
 
 function App() {
-    const [activeSlide, setActiveSlide] = useState<Slide | null>(null);
+    const [activeSlideIndex, setActiveSlideIndex] = useState<ActiveSlideIndex | null>(null);
     const [presentationDetails, setPresentationDetails] = useState<Presentation | null>(null);
 
     useEffect(() => {
@@ -30,8 +30,8 @@ function App() {
         const presentationDetails = await getPresentationDetails();
         setPresentationDetails(presentationDetails);
 
-        //const activeSlide = await getActiveSlideIndex();
-        //setActiveSlide(activeSlide);
+        const activeSlideIndex = await getActiveSlideIndex();
+        setActiveSlideIndex(activeSlideIndex);
     }
 
     function slideImages(): any[] | null {
@@ -44,49 +44,46 @@ function App() {
         for (let i = 0; i < presentationDetails.slideCount; i++) {
             slides.push(<Image
                 src={getThumbnailUrl(i)}
-                className={presentationDetails.uuid === activeSlide?.presentationUuid && i === activeSlide?.slideIndex ? 'slide active-slide' : 'slide'}
+                className={i === activeSlideIndex?.slideIndex ? 'slide active-slide' : 'slide'}
                 key={i}
                 width='300'
                 onClick={() => {
-                    setActiveSlide(null);
-                    onTriggerSlide(presentationDetails.uuid, i);
+                    setActiveSlideIndex(null);
+                    onTriggerSlide(i);
                 }} />);
         }
 
         return slides;
     }
 
-    function onTriggerSlide(uuid: string, slideIndex: number): void {
-        triggerSlide(slideIndex).then();
-        // triggerSlide(uuid, slideIndex).then(() => {
-        //     setTimeout(() => {
-        //         getActiveSlideIndex().then(slide => {
-        //             setActiveSlide(slide);
-        //         });
-        //     }, 200);
-        // });
+    function onTriggerSlide(slideIndex: number): void {
+        triggerSlide(slideIndex).then(() => {
+            setTimeout(() => {
+                getActiveSlideIndex().then(slideIndex => {
+                    setActiveSlideIndex(slideIndex);
+                });
+            }, 500);
+        });
     }
 
     function onTriggerNextSlide() {
-        triggerNextSlide().then();
-        // triggerNextSlide().then(() => {
-        //     setTimeout(() => {
-        //         getActiveSlideIndex().then(slide => {
-        //             setActiveSlide(slide);
-        //         });
-        //     }, 200);
-        // });
+        triggerNextSlide().then(() => {
+            setTimeout(() => {
+                getActiveSlideIndex().then(slideIndex => {
+                    setActiveSlideIndex(slideIndex);
+                });
+            }, 500);
+        });
     }
 
     function onTriggerPrevSlide() {
-        triggerPrevSlide().then();
-        // triggerPrevSlide().then(() => {
-        //     setTimeout(() => {
-        //         getActiveSlideIndex().then(slide => {
-        //             setActiveSlide(slide);
-        //         });
-        //     }, 200);
-        // });
+        triggerPrevSlide().then(() => {
+            setTimeout(() => {
+                getActiveSlideIndex().then(slideIndex => {
+                    setActiveSlideIndex(slideIndex);
+                });
+            }, 500);
+        });
     }
 
     return (
@@ -116,7 +113,6 @@ function App() {
                     onClick={onTriggerNextSlide}
                 />
             </Panel>
-
         </div>
     );
 }

@@ -1,61 +1,82 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using ProPresenter7WEB.Core;
 using ProPresenter7WEB.Service;
-using ProPresenter7WEB.Service.Exceptions;
 
 namespace ProPresenter7WEB.WebServerApplication.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class SlideController : ControllerBase
+    public class SlideController : BaseProPresenterController
     {
-        private readonly IProPresenterStorageService _proPresenterStorageService;
         private readonly IPresentationService _presentationService;
 
         public SlideController(
             IProPresenterStorageService proPresenterStorageService,
             IPresentationService presentationService)
+            : base (proPresenterStorageService)
         {
-            _proPresenterStorageService = proPresenterStorageService;
             _presentationService = presentationService;
+        }
+
+        [HttpGet("{slideIndex}/Image")]
+        public async Task<IActionResult> GetSlideImage(int slideIndex)
+        {
+            EnsureStorageServiceIsConfigured();
+
+            _presentationService.BaseApiAddress = ProPresenterStorageService.ApiAddress;
+            var presentationUuid = ProPresenterStorageService.PresentationUuid;
+
+            var slideImage = await _presentationService.GetSlideImageAsync(presentationUuid, slideIndex);
+
+            return File(slideImage.Content, slideImage.ContentType);
         }
 
         [HttpGet("Next/Trigger")]
         public async Task TriggerNextSlide()
         {
-            ValidateStorageServiceParams();
+            EnsureStorageServiceIsConfigured();
 
-            _presentationService.BaseApiAddress = _proPresenterStorageService.ApiAddress;
+            _presentationService.BaseApiAddress = ProPresenterStorageService.ApiAddress;
+            var presentationUuid = ProPresenterStorageService.PresentationUuid;
 
-            await _presentationService.TriggerNextSlideAsync(_proPresenterStorageService.PresentationUuid);
+            await _presentationService.FocusPresentationAsync(presentationUuid);
+            await _presentationService.TriggerNextSlideAsync(presentationUuid);
         }
 
         [HttpGet("Previous/Trigger")]
         public async Task TriggerPreviousSlide()
         {
-            ValidateStorageServiceParams();
+            EnsureStorageServiceIsConfigured();
 
-            _presentationService.BaseApiAddress = _proPresenterStorageService.ApiAddress;
+            _presentationService.BaseApiAddress = ProPresenterStorageService.ApiAddress;
+            var presentationUuid = ProPresenterStorageService.PresentationUuid;
 
-            await _presentationService.TriggerPreviousSlideAsync(_proPresenterStorageService.PresentationUuid);
+            await _presentationService.FocusPresentationAsync(presentationUuid);
+            await _presentationService.TriggerPreviousSlideAsync(presentationUuid);
         }
 
         [HttpGet("{slideIndex}/Trigger")]
         public async Task TriggerSlide(int slideIndex)
         {
-            ValidateStorageServiceParams();
+            EnsureStorageServiceIsConfigured();
 
-            _presentationService.BaseApiAddress = _proPresenterStorageService.ApiAddress;
+            _presentationService.BaseApiAddress = ProPresenterStorageService.ApiAddress;
+            var presentationUuid = ProPresenterStorageService.PresentationUuid;
 
-            await _presentationService.TriggerSlideAsync(_proPresenterStorageService.PresentationUuid, slideIndex);
+            await _presentationService.FocusPresentationAsync(presentationUuid);
+            await _presentationService.TriggerSlideAsync(presentationUuid, slideIndex);
         }
 
-        private void ValidateStorageServiceParams()
+        [HttpGet("Active/Index")]
+        public async Task<ActiveSlideIndex?> GetActiveSlideIndex()
         {
-            if (_proPresenterStorageService.ApiAddress is null)
-                throw new ProPresenterApiAddressNotSetException();
+            EnsureStorageServiceIsConfigured();
 
-            if (_proPresenterStorageService.PresentationUuid is null)
-                throw new ProPresenterApiServiceException("Presentation is not selected.");
+            _presentationService.BaseApiAddress = ProPresenterStorageService.ApiAddress;
+            var presentationUuid = ProPresenterStorageService.PresentationUuid;
+            
+            var presentationActiveIndex = await _presentationService.GetActiveSlideIndexAsync();
+            return presentationActiveIndex.PresentationUuid == presentationUuid ? presentationActiveIndex : null;
         }
     }
 }

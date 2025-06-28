@@ -29,6 +29,10 @@ namespace ProPresenter7WEB.Service
                 .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.Id.Name))
                 .ForMember(dest => dest.SlideCount, opt => opt.MapFrom(src => 
                     src.Groups.SelectMany(gr => gr.Slides).Count()));
+
+            CreateMap<Contracts.PresentationIndex, Core.ActiveSlideIndex>()
+                .ForMember(dest => dest.SlideIndex, opt => opt.MapFrom(src => src.Index))
+                .ForMember(dest => dest.PresentationUuid, opt => opt.MapFrom(src => src.PresentationId.Uuid));
         }
     }
 }

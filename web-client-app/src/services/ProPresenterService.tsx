@@ -1,4 +1,4 @@
-import { Presentation, Slide } from '../core';
+import { Presentation, ActiveSlideIndex } from '../core';
 
 const apiUrl = import.meta.env.VITE_API_URL;
 
@@ -10,12 +10,18 @@ export async function getPresentationDetails(): Promise<Presentation> {
 }
 
 export function getThumbnailUrl(slideIndex: any): string {
-    return `${apiUrl}/api/Presentation/Slide/${slideIndex}`;
+    return `${apiUrl}/api/Slide/${slideIndex}/Image`;
 }
 
-export async function getActiveSlideIndex(): Promise<Slide> {
-    // TODO: Return index of an active slide.
-    throw new Error("Not implemented");
+export async function getActiveSlideIndex(): Promise<ActiveSlideIndex | null> {
+    const response = await fetch(`${apiUrl}/api/Slide/Active/Index`);
+
+    if (response.status === 204) {
+        return null;
+    }
+
+    const activeSlideIndex = await response?.json();
+    return activeSlideIndex;
 }
 
 export async function triggerSlide(slideIndex: any) {
