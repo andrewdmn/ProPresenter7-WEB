@@ -58,15 +58,15 @@ function App() {
                     src={slideImageUrl}
                     className={index === activeSlideIndex?.slideIndex ? 'slide active-slide' : 'slide'}
                     key={index}
-                width='300'
-                onClick={() => {
+                    width='300'
+                    onClick={() => {
                     setActiveSlideIndex(null);
                     onTriggerSlide(index);
-                }} />);
+            }} />);
         });
 
         return slides;
-        }
+    }
 
     function refreshButton(): any {
         return <Button
@@ -81,7 +81,7 @@ function App() {
                 getActiveSlideIndex().then(slideIndex => {
                     setActiveSlideIndex(slideIndex);
                 });
-            }, 500);
+            }, 300);
         });
     }
 
@@ -91,7 +91,7 @@ function App() {
                 getActiveSlideIndex().then(slideIndex => {
                     setActiveSlideIndex(slideIndex);
                 });
-            }, 500);
+            }, 300);
         });
     }
 
@@ -101,7 +101,7 @@ function App() {
                 getActiveSlideIndex().then(slideIndex => {
                     setActiveSlideIndex(slideIndex);
                 });
-            }, 500);
+            }, 300);
         });
     }
 
