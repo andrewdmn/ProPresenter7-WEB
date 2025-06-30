@@ -10,7 +10,7 @@ import { useState, useEffect } from 'react';
 import {
     getActiveSlideIndex,
     getPresentationDetails,
-    getThumbnailUrl,
+    getThumbnail,
     triggerNextSlide,
     triggerPrevSlide,
     triggerSlide
@@ -21,6 +21,7 @@ import { Presentation, ActiveSlideIndex } from './core/index';
 function App() {
     const [activeSlideIndex, setActiveSlideIndex] = useState<ActiveSlideIndex | null>(null);
     const [presentationDetails, setPresentationDetails] = useState<Presentation | null>(null);
+    const [slideImageUrls, setSlideImageUrls] = useState<string[]>([]);
 
     useEffect(() => {
         Init();
@@ -32,6 +33,16 @@ function App() {
 
         const activeSlideIndex = await getActiveSlideIndex();
         setActiveSlideIndex(activeSlideIndex);
+
+        const slideImageUrls: string[] = [];
+        
+        for (let i = 0; i < presentationDetails?.slideCount; i++) {
+            const blob = await getThumbnail(i);
+            const imageUrl = URL.createObjectURL(blob);
+            slideImageUrls.push(imageUrl);
+        }
+
+        setSlideImageUrls(slideImageUrls);
     }
 
     function slideImages(): any[] | null {
@@ -39,21 +50,29 @@ function App() {
             return null;
         }
 
-        const slides = [];
+        const slides: any[] = [];
 
-        for (let i = 0; i < presentationDetails.slideCount; i++) {
-            slides.push(<Image
-                src={getThumbnailUrl(i)}
-                className={i === activeSlideIndex?.slideIndex ? 'slide active-slide' : 'slide'}
-                key={i}
+        slideImageUrls.forEach((slideImageUrl, index) => {
+            slides.push(
+                <Image
+                    src={slideImageUrl}
+                    className={index === activeSlideIndex?.slideIndex ? 'slide active-slide' : 'slide'}
+                    key={index}
                 width='300'
                 onClick={() => {
                     setActiveSlideIndex(null);
-                    onTriggerSlide(i);
+                    onTriggerSlide(index);
                 }} />);
-        }
+        });
 
         return slides;
+        }
+
+    function refreshButton(): any {
+        return <Button
+            icon="pi pi-refresh"
+            tooltip="Refresh"
+            onClick={Init} />
     }
 
     function onTriggerSlide(slideIndex: number): void {
@@ -89,7 +108,8 @@ function App() {
     return (
         <div className="App">
             <Toolbar
-                center={presentationDetails?.name}>
+                center={presentationDetails?.name}
+                end={refreshButton()}>
             </Toolbar>
             <div className='slide-container'>
                 <ScrollPanel style={{ height: "calc(100vh - 260px)", width: "100%" }} className="scroll">
