@@ -76,7 +76,7 @@ namespace ProPresenter7WEB.WebServerApplication.Controllers
             var presentationUuid = ProPresenterStorageService.PresentationUuid;
             
             var presentationActiveIndex = await _presentationService.GetActiveSlideIndexAsync();
-            return presentationActiveIndex.PresentationUuid == presentationUuid ? presentationActiveIndex : null;
+            return presentationActiveIndex?.PresentationUuid == presentationUuid ? presentationActiveIndex : null;
         }
     }
 }

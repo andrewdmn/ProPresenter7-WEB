@@ -9,8 +9,11 @@ export async function getPresentationDetails(): Promise<Presentation> {
     return presentation;
 }
 
-export function getThumbnailUrl(slideIndex: any): string {
-    return `${apiUrl}/api/Slide/${slideIndex}/Image`;
+export async function getThumbnail(slideIndex: number): Promise<Blob> {
+    const response = await fetch(`${apiUrl}/api/Slide/${slideIndex}/Image`)
+    const image = await response.blob();
+
+    return image;
 }
 
 export async function getActiveSlideIndex(): Promise<ActiveSlideIndex | null> {
