@@ -31,13 +31,19 @@ function App() {
         const presentationDetails = await getPresentationDetails();
         setPresentationDetails(presentationDetails);
 
+        if (presentationDetails == null) {
+            // TODO: Display user friendly error message
+            console.error("Presentation is not defined");
+            return;
+        }
+
         const activeSlideIndex = await getActiveSlideIndex();
         setActiveSlideIndex(activeSlideIndex);
 
         const slideImageUrls: string[] = [];
         
         for (let i = 0; i < presentationDetails?.slideCount; i++) {
-            const blob = await getThumbnail(i);
+            const blob = await getThumbnail(presentationDetails.uuid, i);
             const imageUrl = URL.createObjectURL(blob);
             slideImageUrls.push(imageUrl);
         }
@@ -76,7 +82,13 @@ function App() {
     }
 
     function onTriggerSlide(slideIndex: number): void {
-        triggerSlide(slideIndex).then(() => {
+        if (presentationDetails == null) {
+            // TODO: Display user friendly error message
+            console.error("Presentation is not defined");
+            return;
+        }
+
+        triggerSlide(presentationDetails.uuid, slideIndex).then(() => {
             setTimeout(() => {
                 getActiveSlideIndex().then(slideIndex => {
                     setActiveSlideIndex(slideIndex);
@@ -86,7 +98,13 @@ function App() {
     }
 
     function onTriggerNextSlide() {
-        triggerNextSlide().then(() => {
+        if (presentationDetails == null) {
+            // TODO: Display user friendly error message
+            console.error("Presentation is not defined");
+            return;
+        }
+
+        triggerNextSlide(presentationDetails.uuid).then(() => {
             setTimeout(() => {
                 getActiveSlideIndex().then(slideIndex => {
                     setActiveSlideIndex(slideIndex);
@@ -96,7 +114,13 @@ function App() {
     }
 
     function onTriggerPrevSlide() {
-        triggerPrevSlide().then(() => {
+        if (presentationDetails == null) {
+            // TODO: Display user friendly error message
+            console.error("Presentation is not defined");
+            return;
+        }
+
+        triggerPrevSlide(presentationDetails.uuid).then(() => {
             setTimeout(() => {
                 getActiveSlideIndex().then(slideIndex => {
                     setActiveSlideIndex(slideIndex);
