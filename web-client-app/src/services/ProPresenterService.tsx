@@ -9,8 +9,8 @@ export async function getPresentationDetails(): Promise<Presentation> {
     return presentation;
 }
 
-export async function getThumbnail(slideIndex: number): Promise<Blob> {
-    const response = await fetch(`${apiUrl}/api/Slide/${slideIndex}/Image`)
+export async function getThumbnail(presentationUuid: string, slideIndex: number): Promise<Blob> {
+    const response = await fetch(`${apiUrl}/api/Presentation/${presentationUuid}/${slideIndex}/Image`)
     const image = await response.blob();
 
     return image;
@@ -27,14 +27,14 @@ export async function getActiveSlideIndex(): Promise<ActiveSlideIndex | null> {
     return activeSlideIndex;
 }
 
-export async function triggerSlide(slideIndex: any) {
-    await fetch(`${apiUrl}/api/Slide/${slideIndex}/Trigger`);
+export async function triggerSlide(presentationUuid: string, slideIndex: any) {
+    await fetch(`${apiUrl}/api/Presentation/${presentationUuid}/${slideIndex}/Trigger`);
 }
 
-export async function triggerNextSlide() {
-    await fetch(`${apiUrl}/api/Slide/Next/Trigger`);
+export async function triggerNextSlide(presentationUuid: string) {
+    await fetch(`${apiUrl}/api/Presentation/${presentationUuid}/Next/Trigger`);
 }
 
-export async function triggerPrevSlide() {
-    await fetch(`${apiUrl}/api/Slide/Previous/Trigger`);
+export async function triggerPrevSlide(presentationUuid: string) {
+    await fetch(`${apiUrl}/api/Presentation/${presentationUuid}/Previous/Trigger`);
 }
